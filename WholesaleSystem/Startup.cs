@@ -39,8 +39,10 @@ namespace WholesaleSystem
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>().AddEntityFrameworkSqlServer();
             services.AddAutoMapper(typeof(AutoMapperConfig));
+
             services.AddMvc()
-                .AddJsonOptions(options =>  options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase);
+                .AddJsonOptions(options =>  options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase)
+                .AddXmlSerializerFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

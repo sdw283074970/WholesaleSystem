@@ -12,16 +12,40 @@ namespace WholesaleSystem.Manager
 {
     public class WebServiceManager
     {
-        public static XmlDocument QueryPostWebService(string URL, Hashtable Pars)
+        public static string QueryPostWebService(string URL, Hashtable Pars)
         {
+            var _manager = new XmlManager();
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+            var requestXml = _manager.GenerateXml(Pars["paramsJson"], Pars["appToken"].ToString(), Pars["appKey"].ToString(), Pars["service"].ToString()).ToString();
+
+            byte[] bytes;
+            bytes = Encoding.ASCII.GetBytes(requestXml);
+
             request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            SetWebRequest(request);
-            byte[] data = EncodePars(Pars);
-            WriteRequestData(request, data);
-            var result = request.GetResponse();
-            return ReadXmlResponse(result);
+            request.ContentType = "application/xml; encoding='utf-8'";
+            request.ContentLength = bytes.Length;
+
+            Stream requestStream = request.GetRequestStream();
+
+            requestStream.Write(bytes, 0, bytes.Length);
+            requestStream.Close();
+            HttpWebResponse response;
+            response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream responseStream = response.GetResponseStream();
+                string responseStr = new StreamReader(responseStream).ReadToEnd();
+                return responseStr;
+            }
+            return null;
+
+            //SetWebRequest(request);
+            //byte[] data = EncodePars(requestXml);
+            //var data = Encoding.UTF8.GetBytes(requestXml.ToString());
+            //WriteRequestData(request, data);
+            //var result = request.GetResponse();
+            //return ReadXmlResponse(result);
         }
 
         private static void SetWebRequest(HttpWebRequest request)
@@ -60,7 +84,7 @@ namespace WholesaleSystem.Manager
         private static XmlDocument ReadXmlResponse(WebResponse response)
         {
             StreamReader sr = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-            String retXml = sr.ReadToEnd();
+            var retXml = sr.ReadToEnd();
             sr.Close();
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(retXml);

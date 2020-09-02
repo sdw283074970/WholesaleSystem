@@ -16,13 +16,13 @@ namespace WholesaleSystem.Manager
             Hashtable ht = new Hashtable();
 
             var paramsJson = new GetProductInventoryJson { 
-                Page = 1,
-                PageSize = 1000,
-                Product_sku = "",
-                Product_sku_arr = new string[0],
-                Warehouse_code = "",
-                Warehouse_code_arr = new string[0],
-                Update_start_time = new DateTime(2018, 1, 1)
+                page = 1,
+                pageSize = 100,
+                product_sku = "",
+                product_sku_arr = new string[0],
+                warehouse_code = "",
+                warehouse_code_arr = new string[0],
+                update_start_time = new DateTime(2018, 1, 1).ToString("yyyy-MM-dd hh:mm:ss")
             };
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(paramsJson, Newtonsoft.Json.Formatting.Indented);
@@ -32,7 +32,8 @@ namespace WholesaleSystem.Manager
             ht.Add("appKey", "2ff8217b28a496c62948a16d367e59ee");
             ht.Add("service", "getProductInventory");
 
-            var xx = WebServiceManager.QueryPostWebService(url, ht);
+            var result  = WebServiceManager.QueryPostWebService(url, ht);
+            // TO DO
         }
     }
 }

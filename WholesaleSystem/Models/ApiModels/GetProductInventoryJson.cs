@@ -7,18 +7,18 @@ namespace WholesaleSystem.Models.ApiModels
 {
     public class GetProductInventoryJson
     {
-        public int PageSize { get; set; }
+        public int pageSize { get; set; }
 
-        public int Page { get; set; }
+        public int page { get; set; }
 
-        public string Product_sku { get; set; }
+        public string product_sku { get; set; }
 
-        public string[] Product_sku_arr { get; set; }
+        public string[] product_sku_arr { get; set; }
 
-        public string Warehouse_code { get; set; }
+        public string warehouse_code { get; set; }
 
-        public string[] Warehouse_code_arr { get; set; }
+        public string[] warehouse_code_arr { get; set; }
 
-        public DateTime Update_start_time { get; set; }
+        public string update_start_time { get; set; }
     }
 }
