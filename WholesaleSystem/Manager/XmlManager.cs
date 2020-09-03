@@ -13,7 +13,7 @@ namespace WholesaleSystem.Manager
 {
     public class XmlManager
     {
-        public XDocument GenerateXml(object js, string token, string key, string service)
+        public static XDocument GenerateXml(object js, string token, string key, string service)
         {
             XNamespace se = "http://schemas.xmlsoap.org/soap/envelope/";
             XNamespace ns = "http://www.example.org/Ec/";
@@ -32,7 +32,7 @@ namespace WholesaleSystem.Manager
             );
         }
 
-        public string ToXml<T>(T obj)
+        public static string ToXml<T>(T obj)
         {
             try
             {
@@ -49,7 +49,6 @@ namespace WholesaleSystem.Manager
             {
                 return ex.Message;
             }
-
         }
     }
 }

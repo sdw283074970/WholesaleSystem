@@ -12,12 +12,10 @@ namespace WholesaleSystem.Manager
 {
     public class WebServiceManager
     {
-        public static string QueryPostWebService(string URL, Hashtable Pars)
+        public static XmlDocument QueryPostWebService(string URL, Hashtable Pars)
         {
-            var _manager = new XmlManager();
-
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
-            var requestXml = _manager.GenerateXml(Pars["paramsJson"], Pars["appToken"].ToString(), Pars["appKey"].ToString(), Pars["service"].ToString()).ToString();
+            var requestXml = XmlManager.GenerateXml(Pars["paramsJson"], Pars["appToken"].ToString(), Pars["appKey"].ToString(), Pars["service"].ToString()).ToString();
 
             byte[] bytes;
             bytes = Encoding.ASCII.GetBytes(requestXml);
@@ -32,11 +30,16 @@ namespace WholesaleSystem.Manager
             requestStream.Close();
             HttpWebResponse response;
             response = (HttpWebResponse)request.GetResponse();
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                Stream responseStream = response.GetResponseStream();
-                string responseStr = new StreamReader(responseStream).ReadToEnd();
-                return responseStr;
+                // 返回string结果
+                //Stream responseStream = response.GetResponseStream();
+                //string responseStr = new StreamReader(responseStream).ReadToEnd();
+                //return responseStr;
+
+                // 返回xml结果
+                return ReadXmlResponse(response);
             }
             return null;
 

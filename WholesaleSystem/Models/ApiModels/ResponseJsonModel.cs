@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace WholesaleSystem.Models.ApiModels
 {
-    public class ResponseJson
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    public class ResponseJsonModel
     {
         public string Ask { get; set; }
 
@@ -18,7 +21,8 @@ namespace WholesaleSystem.Models.ApiModels
         public int Count { get; set; }
     }
 
-    public  class Pagenation
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    public class Pagenation
     {
         public int Page { get; set; }
 

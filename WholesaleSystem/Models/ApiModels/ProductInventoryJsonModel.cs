@@ -1,15 +1,19 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace WholesaleSystem.Models.ApiModels
 {
-    public class ProductInventoryJson : ResponseJson
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    public class ProductInventoryJsonModel : ResponseJsonModel
     {
-        public ICollection<ProductInventory> Data { get; set; }
+        public IList<ProductInventory> Data { get; set; }
     }
 
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class ProductInventory
     {
         public string Product_barcode { get; set; }

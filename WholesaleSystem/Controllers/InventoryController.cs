@@ -26,7 +26,7 @@ namespace WholesaleSystem.Controllers
 
             manager.SyncInventory();
 
-            return Ok();
+            return Ok("Sync success");
         }
     }
 }
