@@ -21,6 +21,8 @@ namespace WholesaleSystem.Models
 
         public bool IsMainPicture { get; set; }
 
+        public Inventory Inventory { get; set; }
+
         public ICollection<OperationLog> OperationLogs { get; set; }
     }
 }

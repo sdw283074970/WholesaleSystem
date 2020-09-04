@@ -102,9 +102,11 @@ namespace WholesaleSystem.Manager
             var firstJson = Newtonsoft.Json.JsonConvert.SerializeObject(paramsJson, Newtonsoft.Json.Formatting.Indented);
 
             ht.Add("paramsJson", firstJson);
+            ht.Add("service", "getProductInventory");
+
+            // 验证信息 从服务器拿
             ht.Add("appToken", "5e401e82a1e7c244ec682bb31cde3706");
             ht.Add("appKey", "2ff8217b28a496c62948a16d367e59ee");
-            ht.Add("service", "getProductInventory");
 
             var firstJsonStringResult = WebServiceManager.QueryPostWebService(url, ht).InnerText;
             var firstResult = Newtonsoft.Json.JsonConvert.DeserializeObject<ProductInventoryJsonModel>(firstJsonStringResult);

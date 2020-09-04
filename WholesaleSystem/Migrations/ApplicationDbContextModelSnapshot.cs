@@ -161,7 +161,7 @@ namespace WholesaleSystem.Migrations
 
             modelBuilder.Entity("WholesaleSystem.Models.PicturePath", b =>
                 {
-                    b.HasOne("WholesaleSystem.Models.Inventory", null)
+                    b.HasOne("WholesaleSystem.Models.Inventory", "Inventory")
                         .WithMany("PicturePaths")
                         .HasForeignKey("InventoryId");
                 });
