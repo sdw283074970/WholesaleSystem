@@ -14,6 +14,8 @@ namespace WholesaleSystem.Models
 
         public DbSet<PicturePath> PicturePaths { get; set; }
 
+        public DbSet<ProductType> ProductTypes { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=DESKTOP-6VTKPLI;Database=WholesaleSystem;Integrated Security=True;MultipleActiveResultSets=true");

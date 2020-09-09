@@ -46,5 +46,7 @@ namespace WholesaleSystem.Models
         public ICollection<OperationLog> OperationLogs { get; set; }
 
         public ICollection<PicturePath> PicturePaths { get; set; }
+
+        public ICollection<ProductType> ProductTypes { get; set; }
     }
 }

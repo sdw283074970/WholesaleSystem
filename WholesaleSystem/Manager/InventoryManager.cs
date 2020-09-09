@@ -25,7 +25,7 @@ namespace WholesaleSystem.Manager
 
             foreach(var i in inventoryList)
             {
-                // 如果产品已经存在，更新，否则，建立新的库存
+                // 如果产品已经存在就只更新，否则，建立新的库存
                 var inventoryInDb = _context.Inventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode);
 
                 if (inventoryInDb != null)
