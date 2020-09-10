@@ -13,8 +13,10 @@ namespace WholesaleSystem.Models
 
         public int TypeLayer { get; set; }
 
-        public int TypeCode { get; set; }
+        public string TypeCode { get; set; }
 
-        public Inventory Inventory { get; set; }
+        public bool IsActive { get; set; }
+
+        public ICollection<InventoryProductType> InventoryProductTypes { get; set; }
     }
 }

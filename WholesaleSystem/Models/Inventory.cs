@@ -47,6 +47,19 @@ namespace WholesaleSystem.Models
 
         public ICollection<PicturePath> PicturePaths { get; set; }
 
-        public ICollection<ProductType> ProductTypes { get; set; }
+        public ICollection<InventoryProductType> InventoryProductTypes { get; set; }
+    }
+
+    public class InventoryProductType
+    {
+        public int Id { get; set; }
+
+        public int InventoryId { get; set; }
+
+        public int ProductTypeId { get; set; }
+
+        public Inventory Inventory { get; set; }
+
+        public ProductType ProductType { get; set; }
     }
 }

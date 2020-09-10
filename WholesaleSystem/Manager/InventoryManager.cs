@@ -23,9 +23,9 @@ namespace WholesaleSystem.Manager
             var inventoryList = GetProductInventoiesFromServer();
             var inventoriesInDb = _context.Inventories.Where(x => x.Id > 0);
 
-            foreach(var i in inventoryList)
+            foreach (var i in inventoryList)
             {
-                // 如果产品已经存在就只更新，否则，建立新的库存
+                // 如果产品已经存在就只更新
                 var inventoryInDb = _context.Inventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode);
 
                 if (inventoryInDb != null)
@@ -42,9 +42,12 @@ namespace WholesaleSystem.Manager
                     inventoryInDb.Warehouse_desc = i.Warehouse_desc;
                     inventoryInDb.Pi_update_time = i.Pi_update_time;
                 }
-                else
+                else // 否则，建立新的库存，按照sku解析出种类归属并关联
                 {
-                    _context.Inventories.Add(new Inventory { 
+                    var typesInDb = GetProductTypeInDb(_context, i.Product_sku);
+
+                    var newInventory = new Inventory
+                    {
                         Product_sku = i.Product_sku,
                         Reference_no = i.Reference_no,
                         Product_barcode = i.Product_barcode,
@@ -62,10 +65,24 @@ namespace WholesaleSystem.Manager
                         Unsellable = i.Unsellable,
                         Warehouse_desc = i.Warehouse_desc,
                         Pi_update_time = i.Pi_update_time
-                    });
+                    };
+
+                    _context.Inventories.Add(newInventory);
+
+                    foreach (var t in typesInDb)
+                    {
+                        var inventoryProductType = new InventoryProductType
+                        {
+                            Inventory = newInventory,
+                            ProductType = _context.ProductTypes.Find(t)
+                        };
+
+                        _context.InventoryProductTypes.Add(inventoryProductType);
+
+                        newInventory.InventoryProductTypes.Add(inventoryProductType);
+                    }
                 }
             }
-
             _context.SaveChanges();
         }
 
@@ -129,6 +146,65 @@ namespace WholesaleSystem.Manager
             }
 
             return inventoryList;
+        }
+
+        public IEnumerable<ProductType> GetProductTypeInDb(ApplicationDbContext context, string sku)
+        {
+            var typeCodes = GetTypeCodesFromSku(sku);
+            var resultList = new List<ProductType>();
+
+            if (!typeCodes.Any())
+                return null;
+
+            for(int i = 0; i < typeCodes.Count(); i++)
+            {
+                resultList.Add(GetOrCreateProductType(context, typeCodes[i], i + 1));
+            }
+
+            return resultList;
+        }
+
+        public IList<string> GetTypeCodesFromSku(string sku)
+        {
+            var resultList = new List<string>();
+
+            // 从sku的第3位开始判定数字
+            for (int i = 3; i < sku.Length; i+=2)
+            {
+                var result = 1;
+                var ss = sku.Substring(i, 2);
+                int.TryParse(ss, out result);
+
+                // 如果result为0说明转换失败，说明取到的字符串已经不是数字，需终止
+                if (result == 0)
+                    break;
+                else // 如果是数字，则将两位字符串加入结果列表
+                    resultList.Add(ss);
+            }
+
+            return resultList;
+        }
+
+        public ProductType GetOrCreateProductType(ApplicationDbContext context, string code, int layer)
+        {
+            var typeInDb = context.ProductTypes.SingleOrDefault(x => x.TypeCode == code);
+
+            if (typeInDb == null)
+            {
+                context.ProductTypes.Add(new ProductType {
+                    TypeCode = code,
+                    TypeLayer = layer,
+                    TypeName = "TBD"
+                });
+
+                context.SaveChanges();
+
+                return context.ProductTypes.SingleOrDefault(x => x.TypeCode == code);
+            }
+            else
+            {
+                return typeInDb;
+            }
         }
     }
 }
