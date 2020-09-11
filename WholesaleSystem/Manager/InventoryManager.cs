@@ -26,7 +26,7 @@ namespace WholesaleSystem.Manager
             foreach (var i in inventoryList)
             {
                 // 如果产品已经存在就只更新
-                var inventoryInDb = _context.Inventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode);
+                var inventoryInDb = _context.Inventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode && x.Product_sku == i.Product_sku);
 
                 if (inventoryInDb != null)
                 {
@@ -69,12 +69,15 @@ namespace WholesaleSystem.Manager
 
                     _context.Inventories.Add(newInventory);
 
+                    if (typesInDb == null)
+                        continue;
+
                     foreach (var t in typesInDb)
                     {
                         var inventoryProductType = new InventoryProductType
                         {
                             Inventory = newInventory,
-                            ProductType = _context.ProductTypes.Find(t)
+                            ProductType = _context.ProductTypes.Find(t.Id)
                         };
 
                         _context.InventoryProductTypes.Add(inventoryProductType);
@@ -158,7 +161,8 @@ namespace WholesaleSystem.Manager
 
             for(int i = 0; i < typeCodes.Count(); i++)
             {
-                resultList.Add(GetOrCreateProductType(context, typeCodes[i], i + 1));
+                var layer = i + 1;
+                resultList.Add(GetOrCreateProductType(context, sku.Substring(3, layer * 2), layer));
             }
 
             return resultList;
@@ -194,7 +198,8 @@ namespace WholesaleSystem.Manager
                 context.ProductTypes.Add(new ProductType {
                     TypeCode = code,
                     TypeLayer = layer,
-                    TypeName = "TBD"
+                    TypeName = "TBD",
+                    IsActive = true
                 });
 
                 context.SaveChanges();

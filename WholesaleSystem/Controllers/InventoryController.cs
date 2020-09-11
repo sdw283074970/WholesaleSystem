@@ -37,7 +37,7 @@ namespace WholesaleSystem.Controllers
         }
 
         // PUT: api/Inventory
-        [HttpPut]
+        [HttpGet]
         public IActionResult SyncInventory()
         {
             var manager = new InventoryManager();
