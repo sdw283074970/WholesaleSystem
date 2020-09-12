@@ -22,12 +22,10 @@ namespace WholesaleSystem.Manager
         {
             var inventoryList = GetProductInventoiesFromServer();
             var inventoriesInDb = _context.Inventories.Where(x => x.Id > 0);
-
             foreach (var i in inventoryList)
             {
                 // 如果产品已经存在就只更新
                 var inventoryInDb = _context.Inventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode && x.Product_sku == i.Product_sku);
-
                 if (inventoryInDb != null)
                 {
                     inventoryInDb.Sellable = i.Sellable;
@@ -45,7 +43,6 @@ namespace WholesaleSystem.Manager
                 else // 否则，建立新的库存，按照sku解析出种类归属并关联
                 {
                     var typesInDb = GetProductTypeInDb(_context, i.Product_sku);
-
                     var newInventory = new Inventory
                     {
                         Product_sku = i.Product_sku,
@@ -66,7 +63,6 @@ namespace WholesaleSystem.Manager
                         Warehouse_desc = i.Warehouse_desc,
                         Pi_update_time = i.Pi_update_time
                     };
-
                     _context.Inventories.Add(newInventory);
 
                     if (typesInDb == null)
@@ -79,9 +75,7 @@ namespace WholesaleSystem.Manager
                             Inventory = newInventory,
                             ProductType = _context.ProductTypes.Find(t.Id)
                         };
-
                         _context.InventoryProductTypes.Add(inventoryProductType);
-
                         newInventory.InventoryProductTypes.Add(inventoryProductType);
                     }
                 }

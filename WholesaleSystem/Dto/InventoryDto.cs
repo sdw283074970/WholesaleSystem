@@ -43,6 +43,8 @@ namespace WholesaleSystem.Dto
 
         public bool Active { get; set; }
 
-        public ICollection<PicturePathDto> PicturePaths { get; set; }
+        public string Pic { get; set; }
+
+        public float Price { get; set; }
     }
 }

@@ -39,6 +39,7 @@ namespace WholesaleSystem
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>().AddEntityFrameworkSqlServer();
             services.AddAutoMapper(typeof(AutoMapperConfig));
+            services.AddCors(option => option.AddPolicy("cors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(new[] { "http://localhost:8090" })));
 
             services.AddMvc()
                 .AddJsonOptions(options =>  options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase)
@@ -52,13 +53,10 @@ namespace WholesaleSystem
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors("cors");
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
