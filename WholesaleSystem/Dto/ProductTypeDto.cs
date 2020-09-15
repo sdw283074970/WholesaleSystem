@@ -11,6 +11,10 @@ namespace WholesaleSystem.Dto
 
         public string TypeName { get; set; }
 
+        public string TypeCode { get; set; }
+
         public int TypeLayer { get; set; }
+
+        public int ProductCount { get; set; }
     }
 }

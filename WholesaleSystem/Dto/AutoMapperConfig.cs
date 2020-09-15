@@ -13,6 +13,8 @@ namespace WholesaleSystem.Dto
         {
             CreateMap<Inventory, InventoryDto>();
             CreateMap<PicturePath, PicturePathDto>();
+            CreateMap<ProductType, ProductTypeDto>()
+                .ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.InventoryProductTypes.Count));
         }
     }
 }

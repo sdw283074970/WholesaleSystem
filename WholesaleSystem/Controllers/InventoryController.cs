@@ -29,11 +29,27 @@ namespace WholesaleSystem.Controllers
         [HttpGet]
         public IActionResult GetAllInventory()
         {
-            var result = _context.Inventories
+            var resultInDb = _context.Inventories
                 .Include(x => x.PicturePaths)
-                .Where(x => x.Active == true);
+                .Include(x => x.InventoryProductTypes)
+                .ThenInclude(inventoryProducTypes => inventoryProducTypes.ProductType)
+                .Where(x => x.Active == true)
+                .ToList();
 
-            return Ok(_mapper.Map<IEnumerable<Inventory>, IEnumerable<InventoryDto>>(result));
+            var results = _mapper.Map<IList<Inventory>, IList<InventoryDto>>(resultInDb);
+
+            for(var i = 0; i < results.Count; i++)
+            {
+                foreach(var p in resultInDb[i].InventoryProductTypes)
+                {
+                    if (p.ProductType.TypeLayer == 1)
+                    {
+                        results[i].ProductTypeDto = new ProductTypeDto { TypeCode = p.ProductType.TypeCode, TypeName = p.ProductType.TypeName, TypeLayer = p.ProductType.TypeLayer };
+                    }
+                }
+            }
+
+            return Ok(results);
         }
 
         // PUT: api/Inventory

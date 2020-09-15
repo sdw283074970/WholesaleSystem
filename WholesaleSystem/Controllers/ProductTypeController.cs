@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WholesaleSystem.Dto;
 using WholesaleSystem.Models;
 
@@ -27,7 +28,7 @@ namespace WholesaleSystem.Controllers
         [HttpGet]
         public IActionResult GetProductTypes()
         {
-            return Ok(_mapper.Map<IEnumerable<ProductType>, IEnumerable<ProductTypeDto>>(_context.ProductTypes.Where(x => x.IsActive == true)));
+            return Ok(_mapper.Map<IEnumerable<ProductType>, IEnumerable<ProductTypeDto>>(_context.ProductTypes.Include(x => x.InventoryProductTypes).Where(x => x.IsActive == true)));
         }
     }
 }

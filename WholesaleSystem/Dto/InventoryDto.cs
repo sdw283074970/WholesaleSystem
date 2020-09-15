@@ -46,5 +46,7 @@ namespace WholesaleSystem.Dto
         public string Pic { get; set; }
 
         public float Price { get; set; }
+
+        public ProductTypeDto ProductTypeDto { get; set; }
     }
 }

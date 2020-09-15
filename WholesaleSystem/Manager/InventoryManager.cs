@@ -119,8 +119,8 @@ namespace WholesaleSystem.Manager
             ht.Add("service", "getProductInventory");
 
             // 验证信息 从服务器拿
-            ht.Add("appToken", "5e401e82a1e7c244ec682bb31cde3706");
-            ht.Add("appKey", "2ff8217b28a496c62948a16d367e59ee");
+            ht.Add("appToken", "4e1ffb60d2152699500eb37d708c6330");
+            ht.Add("appKey", "5426e043bd1bdc4cca58ce2ecb9f252d");
 
             var firstJsonStringResult = WebServiceManager.QueryPostWebService(url, ht).InnerText;
             var firstResult = Newtonsoft.Json.JsonConvert.DeserializeObject<ProductInventoryJsonModel>(firstJsonStringResult);
@@ -156,7 +156,7 @@ namespace WholesaleSystem.Manager
             for(int i = 0; i < typeCodes.Count(); i++)
             {
                 var layer = i + 1;
-                resultList.Add(GetOrCreateProductType(context, sku.Substring(3, layer * 2), layer));
+                resultList.Add(GetOrCreateProductType(context, sku.Substring(0, layer * 2), layer));
             }
 
             return resultList;
@@ -166,15 +166,13 @@ namespace WholesaleSystem.Manager
         {
             var resultList = new List<string>();
 
-            // 从sku的第3位开始判定数字
-            for (int i = 3; i < sku.Length; i+=2)
+            // 从sku的第0位开始判定数字
+            for (int i = 0; i < sku.Length; i+=2)
             {
-                var result = 1;
                 var ss = sku.Substring(i, 2);
-                int.TryParse(ss, out result);
 
-                // 如果result为0说明转换失败，说明取到的字符串已经不是数字，需终止
-                if (result == 0)
+                // 如果字符串已经不是数字，需终止
+                if (!IsNum(ss))
                     break;
                 else // 如果是数字，则将两位字符串加入结果列表
                     resultList.Add(ss);
@@ -204,6 +202,26 @@ namespace WholesaleSystem.Manager
             {
                 return typeInDb;
             }
+        }
+
+        public bool IsNum(string text)
+
+        {
+
+            for (int i = 0; i < text.Length; i++)
+            {
+
+                if (!char.IsNumber(text, i))
+                {
+
+                    return false; //输入的不是数字  
+
+                }
+
+            }
+
+            return true; //否则是数字
+
         }
     }
 }
