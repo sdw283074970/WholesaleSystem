@@ -39,6 +39,8 @@ namespace WholesaleSystem.Models
 
         public int Shared { get; set; }
 
+        public float OriginalPrice { get; set; }
+
         public string Warehouse_desc { get; set; }
 
         public bool Active { get; set; }

@@ -13,6 +13,8 @@ namespace WholesaleSystem.Dto
 
         public string Path { get; set; }
 
+        public string Url { get; set; }
+
         public DateTime UploadDate { get; set; }
 
         public string UploadBy { get; set; }

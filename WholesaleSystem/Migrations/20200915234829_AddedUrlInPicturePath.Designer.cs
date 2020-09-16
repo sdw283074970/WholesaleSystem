@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WholesaleSystem.Models;
 
 namespace WholesaleSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200915234829_AddedUrlInPicturePath")]
+    partial class AddedUrlInPicturePath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +33,6 @@ namespace WholesaleSystem.Migrations
 
                     b.Property<int>("Onway")
                         .HasColumnType("int");
-
-                    b.Property<float>("OriginalPrice")
-                        .HasColumnType("real");
 
                     b.Property<int>("Pending")
                         .HasColumnType("int");

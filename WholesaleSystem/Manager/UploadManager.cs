@@ -50,10 +50,10 @@ namespace WholesaleSystem.Manager
 
                         //判断文件大小    
                         long length = item.Length;
-                        if (length > 1024 * 1024 * 2) //2M
+                        if (length > 1024 * 1024 * 4) //4M
                         {
-                            throw new Exception("上传的文件不能大于2M");
-                            //return Error("上传的文件不能大于2M");
+                            throw new Exception("上传的文件不能大于4M");
+                            //return Error("上传的文件不能大于4M");
                         }
 
                         #endregion
@@ -68,9 +68,12 @@ namespace WholesaleSystem.Manager
                             item.CopyTo(fs);
                             fs.Flush();
                         }
+
+                        // TO DO
                         filePaths.Add(new PicturePath { 
                             Active = true,
                             IsMainPicture = false,
+                            Url = "Img/" + saveName,
                             Path = filePath + saveName,
                             UploadBy = "N/A",
                             UploadDate = DateTime.Now,
