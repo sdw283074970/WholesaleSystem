@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WholesaleSystem.Models
 {
-    public class Inventory
+    public class ProductInventory
     {
         public int Id { get; set; }
 
@@ -47,12 +47,12 @@ namespace WholesaleSystem.Models
 
         public ICollection<OperationLog> OperationLogs { get; set; }
 
-        public ICollection<PicturePath> PicturePaths { get; set; }
+        public ICollection<ImageFile> PicturePaths { get; set; }
 
-        public ICollection<InventoryProductType> InventoryProductTypes { get; set; }
+        public ICollection<ProductInventoryProductType> InventoryProductTypes { get; set; }
     }
 
-    public class InventoryProductType
+    public class ProductInventoryProductType
     {
         public int Id { get; set; }
 
@@ -60,7 +60,7 @@ namespace WholesaleSystem.Models
 
         public int ProductTypeId { get; set; }
 
-        public Inventory Inventory { get; set; }
+        public ProductInventory Inventory { get; set; }
 
         public ProductType ProductType { get; set; }
     }

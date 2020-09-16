@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WholesaleSystem.Dto
+namespace WholesaleSystem.Models
 {
-    public class PicturePathDto
+    public class ImageFile
     {
         public int Id { get; set; }
 
@@ -22,5 +22,9 @@ namespace WholesaleSystem.Dto
         public bool Active { get; set; }
 
         public bool IsMainPicture { get; set; }
+
+        public ProductInventory Inventory { get; set; }
+
+        public ICollection<OperationLog> OperationLogs { get; set; }
     }
 }

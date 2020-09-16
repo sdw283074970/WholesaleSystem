@@ -17,6 +17,6 @@ namespace WholesaleSystem.Models
 
         public bool IsActive { get; set; }
 
-        public ICollection<InventoryProductType> InventoryProductTypes { get; set; }
+        public ICollection<ProductInventoryProductType> InventoryProductTypes { get; set; }
     }
 }

@@ -8,15 +8,15 @@ namespace WholesaleSystem.Models
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<ProductInventory> ProdectuInventories { get; set; }
 
         public DbSet<OperationLog> OperationLogs { get; set; }
 
-        public DbSet<PicturePath> PicturePaths { get; set; }
+        public DbSet<ImageFile> ImageFiles { get; set; }
 
         public DbSet<ProductType> ProductTypes { get; set; }
 
-        public DbSet<InventoryProductType> InventoryProductTypes { get; set; }
+        public DbSet<ProductInventoryProductType> ProductInventoryProductTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -30,15 +30,15 @@ namespace WholesaleSystem.Models
             //    .HasOptional(c => c.PickingRecord)
             //    .WithRequired(c => c.FCRegularLocationDetail);
 
-            modelBuilder.Entity<InventoryProductType>()
+            modelBuilder.Entity<ProductInventoryProductType>()
                 .HasKey(x => new { x.InventoryId, x.ProductTypeId });
 
-            modelBuilder.Entity<InventoryProductType>()
+            modelBuilder.Entity<ProductInventoryProductType>()
                 .HasOne(x => x.Inventory)
                 .WithMany(x => x.InventoryProductTypes)
                 .HasForeignKey(x => x.InventoryId);
 
-            modelBuilder.Entity<InventoryProductType>()
+            modelBuilder.Entity<ProductInventoryProductType>()
                 .HasOne(x => x.ProductType)
                 .WithMany(x => x.InventoryProductTypes)
                 .HasForeignKey(x => x.ProductTypeId);

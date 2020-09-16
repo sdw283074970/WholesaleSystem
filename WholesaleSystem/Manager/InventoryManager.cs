@@ -21,11 +21,11 @@ namespace WholesaleSystem.Manager
         public void SyncInventory()
         {
             var inventoryList = GetProductInventoiesFromServer();
-            var inventoriesInDb = _context.Inventories.Where(x => x.Id > 0);
+            var inventoriesInDb = _context.ProdectuInventories.Where(x => x.Id > 0);
             foreach (var i in inventoryList)
             {
                 // 如果产品已经存在就只更新
-                var inventoryInDb = _context.Inventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode && x.Product_sku == i.Product_sku);
+                var inventoryInDb = _context.ProdectuInventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode && x.Product_sku == i.Product_sku);
                 if (inventoryInDb != null)
                 {
                     inventoryInDb.Sellable = i.Sellable;
@@ -43,7 +43,7 @@ namespace WholesaleSystem.Manager
                 else // 否则，建立新的库存，按照sku解析出种类归属并关联
                 {
                     var typesInDb = GetProductTypeInDb(_context, i.Product_sku);
-                    var newInventory = new Inventory
+                    var newInventory = new Models.ProductInventory
                     {
                         Product_sku = i.Product_sku,
                         Reference_no = i.Reference_no,
@@ -63,19 +63,19 @@ namespace WholesaleSystem.Manager
                         Warehouse_desc = i.Warehouse_desc,
                         Pi_update_time = i.Pi_update_time
                     };
-                    _context.Inventories.Add(newInventory);
+                    _context.ProdectuInventories.Add(newInventory);
 
                     if (typesInDb == null)
                         continue;
 
                     foreach (var t in typesInDb)
                     {
-                        var inventoryProductType = new InventoryProductType
+                        var inventoryProductType = new ProductInventoryProductType
                         {
                             Inventory = newInventory,
                             ProductType = _context.ProductTypes.Find(t.Id)
                         };
-                        _context.InventoryProductTypes.Add(inventoryProductType);
+                        _context.ProductInventoryProductTypes.Add(inventoryProductType);
                         newInventory.InventoryProductTypes.Add(inventoryProductType);
                     }
                 }
@@ -83,7 +83,7 @@ namespace WholesaleSystem.Manager
             _context.SaveChanges();
         }
 
-        private bool CheckIfExistInDb(IEnumerable<Inventory> inventoriesInDb, ProductInventory inventoryInServer)
+        private bool CheckIfExistInDb(IEnumerable<Models.ProductInventory> inventoriesInDb, Models.ApiModels.ProductInventory inventoryInServer)
         {
             var result = inventoriesInDb.Where(x => x.Product_barcode == inventoryInServer.Product_barcode).Count();
 
@@ -93,11 +93,11 @@ namespace WholesaleSystem.Manager
             return false;
         }
 
-        public IList<ProductInventory> GetProductInventoiesFromServer()
+        public IList<Models.ApiModels.ProductInventory> GetProductInventoiesFromServer()
         {
             var url = "http://47.75.146.204/default/svc/web-service";
             Hashtable ht = new Hashtable();
-            var inventoryList = new List<ProductInventory>();
+            var inventoryList = new List<Models.ApiModels.ProductInventory>();
 
             // 受接口限制，每次请求最多只能获得100条数据
             var currentPage = 1;

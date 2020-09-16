@@ -8,14 +8,14 @@ namespace WholesaleSystem.Manager
 {
     public class UploadManager
     {
-        public IEnumerable<PicturePath> UploadPicFile(List<IFormFile> files)
+        public IEnumerable<ImageFile> UploadPicFile(List<IFormFile> files)
         {
             if (files.Count < 1)
             {
                 throw new Exception("文件为空");
             }
             //返回的文件地址
-            var filePaths = new List<PicturePath>();
+            var filePaths = new List<ImageFile>();
             var now = DateTime.Now;
             //文件存储路径
             var filePath = string.Format("/Uploads/{0}/{1}/{2}/", now.ToString("yyyy"), now.ToString("yyyyMM"), now.ToString("yyyyMMdd"));
@@ -70,7 +70,7 @@ namespace WholesaleSystem.Manager
                         }
 
                         // TO DO
-                        filePaths.Add(new PicturePath { 
+                        filePaths.Add(new ImageFile { 
                             Active = true,
                             IsMainPicture = false,
                             Url = "Img/" + saveName,

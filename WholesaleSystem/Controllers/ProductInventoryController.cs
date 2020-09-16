@@ -14,12 +14,12 @@ namespace WholesaleSystem.Controllers
     [Route("api/[controller]")]
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class InventoryController : ControllerBase
+    public class ProductInventoryController : ControllerBase
     {
         public IMapper _mapper { get; set; }
         public ApplicationDbContext _context { get; set; }
 
-        public InventoryController(IMapper mapper)
+        public ProductInventoryController(IMapper mapper)
         {
             _mapper = mapper;
             _context = new ApplicationDbContext();
@@ -29,14 +29,14 @@ namespace WholesaleSystem.Controllers
         [HttpGet]
         public IActionResult GetAllInventory()
         {
-            var resultInDb = _context.Inventories
+            var resultInDb = _context.ProdectuInventories
                 .Include(x => x.PicturePaths)
                 .Include(x => x.InventoryProductTypes)
                 .ThenInclude(inventoryProducTypes => inventoryProducTypes.ProductType)
                 .Where(x => x.Active == true)
                 .ToList();
 
-            var results = _mapper.Map<IList<Inventory>, IList<InventoryDto>>(resultInDb);
+            var results = _mapper.Map<IList<ProductInventory>, IList<InventoryDto>>(resultInDb);
 
             for(var i = 0; i < results.Count; i++)
             {

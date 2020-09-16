@@ -30,8 +30,8 @@ namespace WholesaleSystem.Controllers
         [HttpPost]
         public IActionResult Post([FromQuery]int inventoryId, [FromBody]List<IFormFile> files)
         {
-            var pathList = _uploadManager.UploadPicFile(files).ToList();
-            var inventoryInDb = _context.Inventories
+            var imageFiles = _uploadManager.UploadPicFile(files).ToList();
+            var inventoryInDb = _context.ProdectuInventories
                 .Include(x => x.PicturePaths)
                 .SingleOrDefault(x => x.Id == inventoryId);
 
@@ -40,14 +40,14 @@ namespace WholesaleSystem.Controllers
                 throw new Exception("Inventory Id: " + inventoryId + " not found.");
             }
 
-            foreach(var p in pathList)
+            foreach(var i in imageFiles)
             {
-                p.Inventory = inventoryInDb;
+                i.Inventory = inventoryInDb;
             }
 
-            pathList[0].IsMainPicture = true;
+            imageFiles[0].IsMainPicture = true;
 
-            _context.PicturePaths.AddRange(pathList);
+            _context.ImageFiles.AddRange(imageFiles);
             _context.SaveChanges();
 
             return Created(Request.Path, "Upload success");
