@@ -11,7 +11,7 @@ namespace WholesaleSystem.Dto
     {
         public AutoMapperConfig()
         {
-            CreateMap<ProductInventory, InventoryDto>();
+            CreateMap<ProductInventory, ProductInventoryDto>();
             CreateMap<ImageFile, ImageFileDto>();
             CreateMap<ProductType, ProductTypeDto>()
                 .ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.InventoryProductTypes.Count));

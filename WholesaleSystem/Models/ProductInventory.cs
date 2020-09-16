@@ -41,6 +41,10 @@ namespace WholesaleSystem.Models
 
         public float OriginalPrice { get; set; }
 
+        public float SalePrice { get; set; }
+
+        public float CostPrice { get; set; }
+
         public string Warehouse_desc { get; set; }
 
         public bool Active { get; set; }

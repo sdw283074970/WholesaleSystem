@@ -36,7 +36,7 @@ namespace WholesaleSystem.Controllers
                 .Where(x => x.Active == true)
                 .ToList();
 
-            var results = _mapper.Map<IList<ProductInventory>, IList<InventoryDto>>(resultInDb);
+            var results = _mapper.Map<IList<ProductInventory>, IList<ProductInventoryDto>>(resultInDb);
 
             for(var i = 0; i < results.Count; i++)
             {

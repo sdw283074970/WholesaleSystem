@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WholesaleSystem.Dto
 {
-    public class InventoryDto
+    public class ProductInventoryDto
     {
         public int Id { get; set; }
 
@@ -48,6 +48,10 @@ namespace WholesaleSystem.Dto
         public float OriginalPrice { get; set; }
 
         public float Price { get; set; }
+
+        public float SalePrice { get; set; }
+
+        public float CostPrice { get; set; }
 
         public ProductTypeDto ProductTypeDto { get; set; }
     }
