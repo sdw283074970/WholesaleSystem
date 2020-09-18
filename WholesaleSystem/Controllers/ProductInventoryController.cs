@@ -27,11 +27,11 @@ namespace WholesaleSystem.Controllers
 
         // GET: api/Inventory/
         [HttpGet]
-        public IActionResult GetAllInventory()
+        public IActionResult GetAllProductInventory()
         {
             var resultInDb = _context.ProdectuInventories
-                .Include(x => x.PicturePaths)
-                .Include(x => x.InventoryProductTypes)
+                .Include(x => x.ImageFiles)
+                .Include(x => x.ProductInventoryProductTypes)
                 .ThenInclude(inventoryProducTypes => inventoryProducTypes.ProductType)
                 .Where(x => x.Active == true)
                 .ToList();
@@ -40,7 +40,7 @@ namespace WholesaleSystem.Controllers
 
             for(var i = 0; i < results.Count; i++)
             {
-                foreach(var p in resultInDb[i].InventoryProductTypes)
+                foreach(var p in resultInDb[i].ProductInventoryProductTypes)
                 {
                     if (p.ProductType.TypeLayer == 1)
                     {

@@ -51,16 +51,16 @@ namespace WholesaleSystem.Models
 
         public ICollection<OperationLog> OperationLogs { get; set; }
 
-        public ICollection<ImageFile> PicturePaths { get; set; }
+        public ICollection<ImageFile> ImageFiles { get; set; }
 
-        public ICollection<ProductInventoryProductType> InventoryProductTypes { get; set; }
+        public ICollection<ProductInventoryProductType> ProductInventoryProductTypes { get; set; }
     }
 
     public class ProductInventoryProductType
     {
         public int Id { get; set; }
 
-        public int InventoryId { get; set; }
+        public int ProductInventoryId { get; set; }
 
         public int ProductTypeId { get; set; }
 

@@ -2,25 +2,33 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using WholesaleSystem.Models;
 
 namespace WholesaleSystem.Manager
 {
     public class UploadManager
     {
-        public IEnumerable<ImageFile> UploadPicFile(List<IFormFile> files)
+        private ApplicationDbContext _context;
+
+        public UploadManager()
+        {
+            _context = new ApplicationDbContext();
+        }
+
+        public IEnumerable<ImageFile> HandleUploadedPicFile(List<IFormFile> files)
         {
             if (files.Count < 1)
             {
                 throw new Exception("文件为空");
             }
             //返回的文件地址
-            var filePaths = new List<ImageFile>();
+            var imageFiles = new List<ImageFile>();
             var now = DateTime.Now;
             //文件存储路径
-            var filePath = string.Format("/Uploads/{0}/{1}/{2}/", now.ToString("yyyy"), now.ToString("yyyyMM"), now.ToString("yyyyMMdd"));
+            var filePath = string.Format("Images/{0}/{1}/{2}/", now.ToString("yyyy"), now.ToString("yyyyMM"), now.ToString("yyyyMMdd"));
             //获取当前web目录
-            var rootPath = @"D://pic";
+            var rootPath = @"D://UploadedFiles/";
             if (!Directory.Exists(rootPath + filePath))
             {
                 Directory.CreateDirectory(rootPath + filePath);
@@ -60,29 +68,39 @@ namespace WholesaleSystem.Manager
 
                         var strDateTime = DateTime.Now.ToString("yyMMddhhmmssfff"); //取得时间字符串
                         var strRan = Convert.ToString(new Random().Next(100, 999)); //生成三位随机数
-                        var saveName = strDateTime + strRan + fileExtension;
+                        var saveName = item.FileName.Split('.')[0] + "_" + strRan + fileExtension;
 
-                        //插入图片数据                 
-                        using (FileStream fs = System.IO.File.Create(rootPath + filePath + saveName))
+                        //插入图片数据
+                        using (FileStream fs = File.Create(rootPath + filePath + saveName))
                         {
+                            // 解析文件名称，看是否符合规则
+                            var productInventoryInDb = GetSingleOrDefaultProductInventory(item.FileName.Split('.')[0]);
+
+                            if (productInventoryInDb == null)
+                                continue;
+
+                            imageFiles.Add(new ImageFile
+                            {
+                                Active = true,
+                                IsMainPicture = false,
+                                Url = filePath + saveName,
+                                Path = rootPath + filePath + saveName,
+                                UploadBy = "N/A",
+                                UploadDate = DateTime.Now,
+                                PictureName = item.FileName,
+                                ProductInventory = productInventoryInDb
+                            });
+
                             item.CopyTo(fs);
                             fs.Flush();
                         }
-
-                        // TO DO
-                        filePaths.Add(new ImageFile { 
-                            Active = true,
-                            IsMainPicture = false,
-                            Url = "Img/" + saveName,
-                            Path = filePath + saveName,
-                            UploadBy = "N/A",
-                            UploadDate = DateTime.Now,
-                            PictureName = item.FileName
-                        });
                     }
                 }
 
-                return filePaths;
+                _context.ImageFiles.AddRange(imageFiles);
+                _context.SaveChanges();
+
+                return imageFiles;
             }
             catch (Exception ex)
             {
@@ -90,6 +108,15 @@ namespace WholesaleSystem.Manager
                 //ex.ToString();
                 throw new Exception("上传失败");
             }
+        }
+
+        public ProductInventory GetSingleOrDefaultProductInventory(string fileNameWithoutExtention)
+        {
+            var sku = fileNameWithoutExtention.Split('_')[0];
+
+            var productInventoryInDb = _context.ProdectuInventories.SingleOrDefault(x => x.Product_sku == sku);
+
+            return productInventoryInDb;
         }
     }
 }

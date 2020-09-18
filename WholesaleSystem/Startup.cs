@@ -72,7 +72,7 @@ namespace WholesaleSystem
             // 通过url访问文件
             app.UseStaticFiles(new StaticFileOptions()  // 自定义自己的文件路径
             {
-                RequestPath = new PathString("/Img"),   // 对外的访问路径
+                RequestPath = new PathString("/Images"),   // 对外的访问路径
                 FileProvider = new PhysicalFileProvider(path)   // 指定实际物理路径
             });
         }

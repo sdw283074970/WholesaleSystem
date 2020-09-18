@@ -31,12 +31,12 @@ namespace WholesaleSystem.Models
             //    .WithRequired(c => c.FCRegularLocationDetail);
 
             modelBuilder.Entity<ProductInventoryProductType>()
-                .HasKey(x => new { x.InventoryId, x.ProductTypeId });
+                .HasKey(x => new { x.ProductInventoryId, x.ProductTypeId });
 
             modelBuilder.Entity<ProductInventoryProductType>()
                 .HasOne(x => x.Inventory)
-                .WithMany(x => x.InventoryProductTypes)
-                .HasForeignKey(x => x.InventoryId);
+                .WithMany(x => x.ProductInventoryProductTypes)
+                .HasForeignKey(x => x.ProductInventoryId);
 
             modelBuilder.Entity<ProductInventoryProductType>()
                 .HasOne(x => x.ProductType)

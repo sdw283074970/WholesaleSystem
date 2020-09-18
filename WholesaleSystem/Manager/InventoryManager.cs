@@ -76,7 +76,7 @@ namespace WholesaleSystem.Manager
                             ProductType = _context.ProductTypes.Find(t.Id)
                         };
                         _context.ProductInventoryProductTypes.Add(inventoryProductType);
-                        newInventory.InventoryProductTypes.Add(inventoryProductType);
+                        newInventory.ProductInventoryProductTypes.Add(inventoryProductType);
                     }
                 }
             }

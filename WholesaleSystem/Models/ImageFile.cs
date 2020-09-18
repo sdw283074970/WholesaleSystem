@@ -23,7 +23,7 @@ namespace WholesaleSystem.Models
 
         public bool IsMainPicture { get; set; }
 
-        public ProductInventory Inventory { get; set; }
+        public ProductInventory ProductInventory { get; set; }
 
         public ICollection<OperationLog> OperationLogs { get; set; }
     }
