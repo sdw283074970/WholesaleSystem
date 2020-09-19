@@ -43,7 +43,7 @@ namespace WholesaleSystem.Dto
 
         public bool Active { get; set; }
 
-        public string Pic { get; set; }
+        public string CoverImageUrl { get; set; }
 
         public float OriginalPrice { get; set; }
 
@@ -54,5 +54,7 @@ namespace WholesaleSystem.Dto
         public float CostPrice { get; set; }
 
         public ProductTypeDto ProductTypeDto { get; set; }
+
+        public IList<ImageFileDto> ImageFilesDto { get; set; }
     }
 }

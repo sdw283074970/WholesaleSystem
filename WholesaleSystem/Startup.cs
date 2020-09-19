@@ -67,7 +67,7 @@ namespace WholesaleSystem
             });
 
             string path = @"D:\\";
-            path = Path.Combine(path, "UploadedFiles");
+            path = Path.Combine(path, @"UploadedFiles\Images");
 
             // 通过url访问文件
             app.UseStaticFiles(new StaticFileOptions()  // 自定义自己的文件路径

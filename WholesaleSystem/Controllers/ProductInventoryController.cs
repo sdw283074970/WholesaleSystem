@@ -44,7 +44,9 @@ namespace WholesaleSystem.Controllers
                 {
                     if (p.ProductType.TypeLayer == 1)
                     {
+                        var coverImg = resultInDb[i].ImageFiles.SingleOrDefault(x => x.IsMainPicture == true);
                         results[i].ProductTypeDto = new ProductTypeDto { TypeCode = p.ProductType.TypeCode, TypeName = p.ProductType.TypeName, TypeLayer = p.ProductType.TypeLayer };
+                        results[i].CoverImageUrl = coverImg == null ? "Images/no_image.gif" : coverImg.Url;
                     }
                 }
             }

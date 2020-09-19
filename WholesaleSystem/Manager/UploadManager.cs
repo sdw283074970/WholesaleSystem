@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,12 +78,12 @@ namespace WholesaleSystem.Manager
                             var productInventoryInDb = GetSingleOrDefaultProductInventory(item.FileName.Split('.')[0]);
 
                             if (productInventoryInDb == null)
-                                continue;
+                                throw new Exception("Upload failed. SKU: " + item.FileName.Split('.')[0].Split('_')[0] + " was not found in inventory.Please upload all the files of this batch again");
 
                             imageFiles.Add(new ImageFile
                             {
                                 Active = true,
-                                IsMainPicture = false,
+                                IsMainPicture = (productInventoryInDb.ImageFiles.Count == 0 && imageFiles.Where(x => x.ProductInventory.Product_sku == item.FileName.Split('_')[0]).Count() == 0) ? true : false,
                                 Url = filePath + saveName,
                                 Path = rootPath + filePath + saveName,
                                 UploadBy = "N/A",
@@ -106,7 +107,7 @@ namespace WholesaleSystem.Manager
             {
                 //这边增加日志，记录错误的原因
                 //ex.ToString();
-                throw new Exception("上传失败");
+                throw new Exception(ex.Message);
             }
         }
 
@@ -114,7 +115,9 @@ namespace WholesaleSystem.Manager
         {
             var sku = fileNameWithoutExtention.Split('_')[0];
 
-            var productInventoryInDb = _context.ProdectuInventories.SingleOrDefault(x => x.Product_sku == sku);
+            var productInventoryInDb = _context.ProdectuInventories
+                .Include(x => x.ImageFiles)
+                .SingleOrDefault(x => x.Product_sku == sku);
 
             return productInventoryInDb;
         }
