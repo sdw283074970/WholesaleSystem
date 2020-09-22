@@ -115,7 +115,7 @@ namespace WholesaleSystem.Manager
         {
             var sku = fileNameWithoutExtention.Split('_')[0];
 
-            var productInventoryInDb = _context.ProdectuInventories
+            var productInventoryInDb = _context.ProductInventories
                 .Include(x => x.ImageFiles)
                 .SingleOrDefault(x => x.Product_sku == sku);
 

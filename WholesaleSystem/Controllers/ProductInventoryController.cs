@@ -29,7 +29,7 @@ namespace WholesaleSystem.Controllers
         [HttpGet]
         public IActionResult GetAllProductInventory()
         {
-            var resultInDb = _context.ProdectuInventories
+            var resultInDb = _context.ProductInventories
                 .Include(x => x.ImageFiles)
                 .Include(x => x.ProductInventoryProductTypes)
                 .ThenInclude(inventoryProducTypes => inventoryProducTypes.ProductType)
@@ -40,7 +40,9 @@ namespace WholesaleSystem.Controllers
 
             for(var i = 0; i < results.Count; i++)
             {
-                foreach(var p in resultInDb[i].ProductInventoryProductTypes)
+                results[i].ImageFilesDto = _mapper.Map<IList<ImageFile>, IList<ImageFileDto>>(resultInDb[i].ImageFiles.ToList());
+
+                foreach (var p in resultInDb[i].ProductInventoryProductTypes)
                 {
                     if (p.ProductType.TypeLayer == 1)
                     {
@@ -51,10 +53,37 @@ namespace WholesaleSystem.Controllers
                 }
             }
 
+            foreach(var r in results)
+            {
+                if (r.ImageFilesDto == null)
+                    continue;
+
+                foreach(var i in r.ImageFilesDto)
+                {
+                    if (i != null)
+                        r.ImageList.Add(i.Url);
+                }
+            }
+
             return Ok(results);
         }
 
-        // PUT: api/Inventory
+        // GET: api/Inventory/
+        [HttpGet]
+        public IActionResult GetProductInventory([FromQuery]int productInventoryId)
+        {
+            var productInventoryInDb = _context.ProductInventories
+                .Include(x => x.ImageFiles)
+                .SingleOrDefault(x => x.Id == productInventoryId);
+
+            var result = _mapper.Map<ProductInventory, ProductInventoryDto>(productInventoryInDb);
+
+            result.ImageFilesDto = _mapper.Map<IEnumerable<ImageFile>, IEnumerable<ImageFileDto>>(productInventoryInDb.ImageFiles).ToList();
+
+            return Ok(result);
+        }
+
+        // PUT: api/Inventory/
         [HttpPut]
         public IActionResult SyncInventory()
         {

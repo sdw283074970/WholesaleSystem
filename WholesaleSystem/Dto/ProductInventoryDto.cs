@@ -23,6 +23,8 @@ namespace WholesaleSystem.Dto
 
         public int Onway { get; set; }
 
+        public IList<string> ImageList { get; set; }
+
         public int Pending { get; set; }
 
         public int Sellable { get; set; }
@@ -55,6 +57,11 @@ namespace WholesaleSystem.Dto
 
         public ProductTypeDto ProductTypeDto { get; set; }
 
-        public IList<ImageFileDto> ImageFilesDto { get; set; }
+        public ICollection<ImageFileDto> ImageFilesDto { get; set; }
+
+        public ProductInventoryDto()
+        {
+            ImageList = new List<string>();
+        }
     }
 }

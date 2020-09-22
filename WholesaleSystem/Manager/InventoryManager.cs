@@ -21,11 +21,11 @@ namespace WholesaleSystem.Manager
         public void SyncInventory()
         {
             var inventoryList = GetProductInventoiesFromServer();
-            var inventoriesInDb = _context.ProdectuInventories.Where(x => x.Id > 0);
+            var inventoriesInDb = _context.ProductInventories.Where(x => x.Id > 0);
             foreach (var i in inventoryList)
             {
                 // 如果产品已经存在就只更新
-                var inventoryInDb = _context.ProdectuInventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode && x.Product_sku == i.Product_sku);
+                var inventoryInDb = _context.ProductInventories.SingleOrDefault(x => x.Product_barcode == i.Product_barcode && x.Product_sku == i.Product_sku);
                 if (inventoryInDb != null)
                 {
                     inventoryInDb.Sellable = i.Sellable;
@@ -63,7 +63,7 @@ namespace WholesaleSystem.Manager
                         Warehouse_desc = i.Warehouse_desc,
                         Pi_update_time = i.Pi_update_time
                     };
-                    _context.ProdectuInventories.Add(newInventory);
+                    _context.ProductInventories.Add(newInventory);
 
                     if (typesInDb == null)
                         continue;

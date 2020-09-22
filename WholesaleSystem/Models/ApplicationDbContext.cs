@@ -8,7 +8,7 @@ namespace WholesaleSystem.Models
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<ProductInventory> ProdectuInventories { get; set; }
+        public DbSet<ProductInventory> ProductInventories { get; set; }
 
         public DbSet<OperationLog> OperationLogs { get; set; }
 
