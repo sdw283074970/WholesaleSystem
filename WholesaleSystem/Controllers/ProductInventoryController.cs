@@ -25,7 +25,7 @@ namespace WholesaleSystem.Controllers
             _context = new ApplicationDbContext();
         }
 
-        // GET: api/Inventory/
+        // GET: api/ProductInventory/
         [HttpGet]
         public IActionResult GetAllProductInventory()
         {
@@ -68,7 +68,7 @@ namespace WholesaleSystem.Controllers
             return Ok(results);
         }
 
-        // GET: api/Inventory/
+        // GET: api/ProductInventory/
         [HttpGet]
         public IActionResult GetProductInventory([FromQuery]int productInventoryId)
         {
@@ -83,13 +83,25 @@ namespace WholesaleSystem.Controllers
             return Ok(result);
         }
 
-        // PUT: api/Inventory/
+        // PUT: api/ProductInventory/SyncInventory
         [HttpPut]
         public IActionResult SyncInventory()
         {
             var manager = new InventoryManager();
             manager.SyncInventory();
             return Ok("Sync success");
+        }
+
+        // PUT: api/ProductInventory/UpdateProductInventory
+        [HttpPut]
+        public IActionResult UpdateProductInventory([FromQuery]int productInventoryId, [FromBody]ProductInventoryDto form)
+        {
+            var productInventoryInDb = _context.ProductInventories.Find(productInventoryId);
+            productInventoryInDb.CostPrice = form.CostPrice;
+            productInventoryInDb.SalePrice = form.SalePrice;
+            productInventoryInDb.OriginalPrice = form.OriginalPrice;
+            _context.SaveChanges();
+            return Ok();
         }
     }
 }

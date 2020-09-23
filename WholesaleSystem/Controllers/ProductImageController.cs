@@ -29,13 +29,59 @@ namespace WholesaleSystem.Controllers
             _mapper = mapper;
         }
 
-        // POST: api/ProductImage/
+        // POST: api/ProductImage/UploadImages/?productInventoryId=foo&operation=bar
         [HttpPost]
-        public IActionResult UploadImages([FromForm(Name = "file")]List<IFormFile> files)
+        public IActionResult UploadImages([FromQuery]int productInventoryId, [FromQuery]string operation, [FromForm(Name = "file")]List<IFormFile> files)
         {
-            var imageFiles = _uploadManager.HandleUploadedPicFile(files).ToList();
+            if (operation == "AutoParse")
+            {
+                var imageFiles = _uploadManager.AutoParseImages(files).ToList();
+                return Created(Request.Path, _mapper.Map<IEnumerable<ImageFile>, IEnumerable<ImageFileDto>>(imageFiles));
+            }
+            else if (operation == "UploadToProduct")
+            {
+                var imageFiles = _uploadManager.UploadImagesToProduct(productInventoryId, files);
+                return Created(Request.Path, _mapper.Map<IEnumerable<ImageFile>, IEnumerable<ImageFileDto>>(imageFiles));
+            }
 
-            return Created(Request.Path, _mapper.Map<IEnumerable<ImageFile>, IEnumerable<ImageFileDto>>(imageFiles));
+            return Ok("No operation applied");
+        }
+
+        // PUT: api/ProductImage/SetCoverImage/?imageId=foo
+        [HttpPut]
+        public void SetCoverImage([FromQuery]int imageId)
+        {
+            var imageInDb = _context.ImageFiles.Include(x => x.ProductInventory.ImageFiles).SingleOrDefault(x => x.Id == imageId);
+
+            if (imageInDb == null)
+                throw new Exception("Image Id " + imageId + " was not found in database.");
+
+            foreach(var i in imageInDb.ProductInventory.ImageFiles)
+            {
+                i.IsMainPicture = false;
+            }
+
+            imageInDb.IsMainPicture = true;
+
+            _context.SaveChanges();
+        }
+
+        // DELETE: api/ProductImage/DeactiveImage/?imageId=foo
+        [HttpDelete]
+        public void DeactiveImage([FromQuery]int imageId)
+        {
+            var imageInDb = _context.ImageFiles.Find(imageId);
+            imageInDb.Active = false;
+            _context.SaveChanges();
+        }
+
+        // DELETE: api/ProductImage/DeleteImage/?imageId=foo
+        [HttpDelete]
+        public void DeleteImage([FromQuery]int imageId)
+        {
+            var imageInDb = _context.ImageFiles.Find(imageId);
+            _context.ImageFiles.Remove(imageInDb);
+            _context.SaveChanges();
         }
     }
 }
