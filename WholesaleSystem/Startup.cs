@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -39,13 +40,16 @@ namespace WholesaleSystem
             services.AddSoapCore();
             //services.TryAddSingleton<ServiceContractImpl>();
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
             services.AddDbContext<ApplicationDbContext>().AddEntityFrameworkSqlServer();
             services.AddAutoMapper(typeof(AutoMapperConfig));
             services.AddCors(option => option.AddPolicy("cors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(new[] { "http://localhost:8090" })));
 
             services.AddMvc()
-                .AddJsonOptions(options =>  options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase)
+                //.AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
                 .AddXmlSerializerFormatters();
         }
 
@@ -63,7 +67,6 @@ namespace WholesaleSystem
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.UseSoapEndpoint<ServiceContractImpl>("/ServicePath.asmx", new BasicHttpBinding());
             });
 
             string path = @"D:\\";

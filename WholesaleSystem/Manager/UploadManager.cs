@@ -83,7 +83,7 @@ namespace WholesaleSystem.Manager
                             imageFiles.Add(new ImageFile
                             {
                                 Active = true,
-                                IsMainPicture = (productInventoryInDb.ImageFiles.Count == 0 && imageFiles.Where(x => x.ProductInventory.Product_sku == item.FileName.Split('_')[0]).Count() == 0) ? true : false,
+                                IsMainPicture = productInventoryInDb.ImageFiles == null ? true : (productInventoryInDb.ImageFiles.SingleOrDefault(x => x.IsMainPicture == true) == null ? true : false),
                                 Url = filePath + saveName,
                                 Path = rootPath + filePath + saveName,
                                 UploadBy = "N/A",
@@ -178,7 +178,7 @@ namespace WholesaleSystem.Manager
                             imageFiles.Add(new ImageFile
                             {
                                 Active = true,
-                                IsMainPicture = (productInventoryInDb.ImageFiles.Count == 0 && imageFiles.Where(x => x.ProductInventory.Product_sku == item.FileName.Split('_')[0]).Count() == 0) ? true : false,
+                                IsMainPicture = productInventoryInDb.ImageFiles == null ? true : (productInventoryInDb.ImageFiles.SingleOrDefault(x => x.IsMainPicture == true) == null ? true : false),
                                 Url = filePath + saveName,
                                 Path = rootPath + filePath + saveName,
                                 UploadBy = "N/A",

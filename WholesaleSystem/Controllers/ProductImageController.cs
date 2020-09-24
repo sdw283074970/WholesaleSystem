@@ -47,9 +47,9 @@ namespace WholesaleSystem.Controllers
             return Ok("No operation applied");
         }
 
-        // PUT: api/ProductImage/SetCoverImage/?imageId=foo
+        // PUT: api/ProductImage/SetImageAsCover/?imageId=foo
         [HttpPut]
-        public void SetCoverImage([FromQuery]int imageId)
+        public void SetImageAsCover([FromQuery]int imageId)
         {
             var imageInDb = _context.ImageFiles.Include(x => x.ProductInventory.ImageFiles).SingleOrDefault(x => x.Id == imageId);
 
@@ -66,20 +66,23 @@ namespace WholesaleSystem.Controllers
             _context.SaveChanges();
         }
 
-        // DELETE: api/ProductImage/DeactiveImage/?imageId=foo
+        // DELETE: api/ProductImage/SoftDeleteImage/?imageId=foo
         [HttpDelete]
-        public void DeactiveImage([FromQuery]int imageId)
+        public void SoftDeleteImage([FromQuery]int imageId)
         {
             var imageInDb = _context.ImageFiles.Find(imageId);
             imageInDb.Active = false;
+            imageInDb.IsMainPicture = false;
             _context.SaveChanges();
         }
 
-        // DELETE: api/ProductImage/DeleteImage/?imageId=foo
+        // DELETE: api/ProductImage/HardDeleteImage/?imageId=foo
         [HttpDelete]
-        public void DeleteImage([FromQuery]int imageId)
+        public void HardDeleteImage([FromQuery]int imageId)
         {
             var imageInDb = _context.ImageFiles.Find(imageId);
+            imageInDb.Active = false;
+            imageInDb.IsMainPicture = false;
             _context.ImageFiles.Remove(imageInDb);
             _context.SaveChanges();
         }

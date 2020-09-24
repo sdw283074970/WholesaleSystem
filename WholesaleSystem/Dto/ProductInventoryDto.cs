@@ -57,7 +57,7 @@ namespace WholesaleSystem.Dto
 
         public ProductTypeDto ProductTypeDto { get; set; }
 
-        public ICollection<ImageFileDto> ImageFilesDto { get; set; }
+        public IList<ImageFileDto> ImageFilesDto { get; set; }
 
         public ProductInventoryDto()
         {

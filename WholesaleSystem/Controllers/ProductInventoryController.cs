@@ -46,9 +46,9 @@ namespace WholesaleSystem.Controllers
                 {
                     if (p.ProductType.TypeLayer == 1)
                     {
-                        var coverImg = resultInDb[i].ImageFiles.SingleOrDefault(x => x.IsMainPicture == true);
+                        var coverImg = resultInDb[i].ImageFiles.Where(x => x.IsMainPicture == true).ToList();
                         results[i].ProductTypeDto = new ProductTypeDto { TypeCode = p.ProductType.TypeCode, TypeName = p.ProductType.TypeName, TypeLayer = p.ProductType.TypeLayer };
-                        results[i].CoverImageUrl = coverImg == null ? "Images/no_image.gif" : coverImg.Url;
+                        results[i].CoverImageUrl = coverImg.Count == 0 ? "Images/no_image.gif" : coverImg.First().Url;
                     }
                 }
             }
@@ -60,7 +60,7 @@ namespace WholesaleSystem.Controllers
 
                 foreach(var i in r.ImageFilesDto)
                 {
-                    if (i != null)
+                    if (i != null && i.Active == true)
                         r.ImageList.Add(i.Url);
                 }
             }
@@ -80,12 +80,14 @@ namespace WholesaleSystem.Controllers
 
             result.ImageFilesDto = _mapper.Map<IEnumerable<ImageFile>, IEnumerable<ImageFileDto>>(productInventoryInDb.ImageFiles).ToList();
 
+            result.ImageFilesDto = result.ImageFilesDto.Where(x => x.Active == true).ToList();
+
             return Ok(result);
         }
 
-        // PUT: api/ProductInventory/SyncInventory
+        // PUT: api/ProductInventory/SyncProductInventory
         [HttpPut]
-        public IActionResult SyncInventory()
+        public IActionResult SyncProductInventory()
         {
             var manager = new InventoryManager();
             manager.SyncInventory();
@@ -94,14 +96,13 @@ namespace WholesaleSystem.Controllers
 
         // PUT: api/ProductInventory/UpdateProductInventory
         [HttpPut]
-        public IActionResult UpdateProductInventory([FromQuery]int productInventoryId, [FromBody]ProductInventoryDto form)
+        public void UpdateProductInventory([FromQuery]int productInventoryId, [FromBody]ProductInventoryDto form)
         {
             var productInventoryInDb = _context.ProductInventories.Find(productInventoryId);
             productInventoryInDb.CostPrice = form.CostPrice;
             productInventoryInDb.SalePrice = form.SalePrice;
             productInventoryInDb.OriginalPrice = form.OriginalPrice;
             _context.SaveChanges();
-            return Ok();
         }
     }
 }
