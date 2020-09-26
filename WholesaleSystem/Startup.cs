@@ -38,6 +38,13 @@ namespace WholesaleSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var DefaultConnection = Configuration.GetConnectionString("DefaultConnection");
+            var StorageConnectionstring = Configuration.GetSection("AppSettings")["StorageConnectionstring"];
+            var ContainerName = Configuration.GetSection("AppSettings")["ContainerName"];
+            AppSettingsModel.DefaultConnection = DefaultConnection;
+            AppSettingsModel.StorageConnectionstring = StorageConnectionstring;
+            AppSettingsModel.ContainerName = ContainerName;
+
             services.AddSoapCore();
             //services.TryAddSingleton<ServiceContractImpl>();
 
@@ -47,8 +54,8 @@ namespace WholesaleSystem
                 });
             services.AddDbContext<ApplicationDbContext>().AddEntityFrameworkSqlServer();
             services.AddAutoMapper(typeof(AutoMapperConfig));
-            services.AddCors(option => option.AddPolicy("cors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(new[] { "http://localhost:8090", "https://allbuylow.com", "http://allbuylow.com", "http://giveitsaveit.com", "https://giveitsaveit.com" })));
-
+            services.AddCors(option => option.AddPolicy("cors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(new[] { "http://localhost:8080", "http://localhost:8090", "https://allbuylow.com", "http://allbuylow.com", "http://giveitsaveit.com", "https://giveitsaveit.com" })));
+    
             services.AddMvc()
                 //.AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
                 .AddXmlSerializerFormatters();
