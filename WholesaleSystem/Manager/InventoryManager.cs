@@ -72,7 +72,7 @@ namespace WholesaleSystem.Manager
                     {
                         var inventoryProductType = new ProductInventoryProductType
                         {
-                            Inventory = newInventory,
+                            ProductInventory = newInventory,
                             ProductType = _context.ProductTypes.Find(t.Id)
                         };
                         _context.ProductInventoryProductTypes.Add(inventoryProductType);

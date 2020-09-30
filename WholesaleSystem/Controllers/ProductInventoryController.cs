@@ -29,46 +29,28 @@ namespace WholesaleSystem.Controllers
         [HttpGet]
         public IActionResult GetAllProductInventory()
         {
-            var resultInDb = _context.ProductInventories
-                .Include(x => x.ImageFiles)
-                .Include(x => x.ProductInventoryProductTypes)
-                .ThenInclude(inventoryProducTypes => inventoryProducTypes.ProductType)
-                .Where(x => x.Active == true)
-                .ToList();
-
-            var results = _mapper.Map<IList<ProductInventory>, IList<ProductInventoryDto>>(resultInDb);
-
-            for(var i = 0; i < results.Count; i++)
-            {
-                results[i].ImageFilesDto = _mapper.Map<IList<ImageFile>, IList<ImageFileDto>>(resultInDb[i].ImageFiles.ToList());
-
-                foreach (var p in resultInDb[i].ProductInventoryProductTypes)
-                {
-                    if (p.ProductType.TypeLayer == 1)
-                    {
-                        var coverImg = resultInDb[i].ImageFiles.Where(x => x.IsMainPicture == true).ToList();
-                        results[i].ProductTypeDto = new ProductTypeDto { TypeCode = p.ProductType.TypeCode, TypeName = p.ProductType.TypeName, TypeLayer = p.ProductType.TypeLayer };
-                        results[i].CoverImageUrl = coverImg.Count == 0 ? "Images/no_image.gif" : coverImg.First().Url;
-                    }
-                }
-            }
-
-            foreach(var r in results)
-            {
-                if (r.ImageFilesDto == null)
-                    continue;
-
-                foreach(var i in r.ImageFilesDto)
-                {
-                    if (i != null && i.Active == true)
-                        r.ImageList.Add(i.Url);
-                }
-            }
-
-            return Ok(results);
+            return Ok(GetProductInventories(0));
         }
 
-        // GET: api/ProductInventory/
+        // GET: api/ProductInventory/GetProductInventoryByTypeId/?typeId=foo
+        [HttpGet]
+        public IActionResult GetProductInventoryByTypeId([FromQuery]int typeId)
+        {
+            //var results = _context.ProductInventoryProductTypes
+            //    .Include(x => x.ProductType)
+            //    .Include(x => x.ProductInventory)
+            //    .Where(x => x.ProductType.Id == typeId && x.ProductInventory.Sellable != 0 && x.ProductInventory.Active == true);
+            //var list = new List<ProductInventoryDto>();
+
+            //foreach(var r in results)
+            //{
+            //    list.Add(_mapper.Map<ProductInventory, ProductInventoryDto>(r.ProductInventory));
+            //}
+
+            return Ok(GetProductInventories(typeId));
+        }
+
+        // GET: api/ProductInventory/GetProductInventory/
         [HttpGet]
         public IActionResult GetProductInventory([FromQuery]int productInventoryId)
         {
@@ -103,6 +85,59 @@ namespace WholesaleSystem.Controllers
             productInventoryInDb.SalePrice = form.SalePrice;
             productInventoryInDb.OriginalPrice = form.OriginalPrice;
             _context.SaveChanges();
+        }
+
+        public IList<ProductInventoryDto> GetProductInventories(int typeId)
+        {
+            var productInventoryTypes = _context.ProductInventoryProductTypes
+                .Include(x => x.ProductType)
+                .Include(x => x.ProductInventory)
+                .ThenInclude(x => x.ImageFiles)
+                .Where(x => x.ProductInventory.Active == true )
+                .ToList();
+
+            if (typeId != 0)
+            {
+                productInventoryTypes = productInventoryTypes.Where(x => x.ProductType.Id == typeId).ToList();
+            }
+
+            var resultList = new List<ProductInventory>();
+
+            foreach(var p in productInventoryTypes)
+            {
+                resultList.Add(p.ProductInventory);
+            }
+
+            var results = _mapper.Map<IList<ProductInventory>, IList<ProductInventoryDto>>(resultList);
+
+            for (var i = 0; i < results.Count; i++)
+            {
+                results[i].ImageFilesDto = _mapper.Map<IList<ImageFile>, IList<ImageFileDto>>(resultList[i].ImageFiles.ToList());
+
+                foreach (var p in resultList[i].ProductInventoryProductTypes)
+                {
+                    if (p.ProductType.TypeLayer == 1)
+                    {
+                        var coverImg = resultList[i].ImageFiles.Where(x => x.IsMainPicture == true).ToList();
+                        results[i].ProductTypeDto = new ProductTypeDto { TypeCode = p.ProductType.TypeCode, TypeName = p.ProductType.TypeName, TypeLayer = p.ProductType.TypeLayer };
+                        results[i].CoverImageUrl = coverImg.Count == 0 ? "Images/no_image.gif" : coverImg.First().Url;
+                    }
+                }
+            }
+
+            foreach (var r in results)
+            {
+                if (r.ImageFilesDto == null)
+                    continue;
+
+                foreach (var i in r.ImageFilesDto)
+                {
+                    if (i != null && i.Active == true)
+                        r.ImageList.Add(i.Url);
+                }
+            }
+
+            return results;
         }
     }
 }

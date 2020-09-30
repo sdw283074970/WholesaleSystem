@@ -12,6 +12,7 @@ using WholesaleSystem.Models;
 namespace WholesaleSystem.Controllers
 {
     [Route("api/[controller]")]
+    [Route("/api/[controller]/[action]")]
     [ApiController]
     public class ProductTypeController : ControllerBase
     {
@@ -24,7 +25,7 @@ namespace WholesaleSystem.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/ProductType
+        // GET: api/ProductType/GetProductTypes
         [HttpGet]
         public IActionResult GetProductTypes()
         {

@@ -35,7 +35,7 @@ namespace WholesaleSystem.Models
                 .HasKey(x => new { x.ProductInventoryId, x.ProductTypeId });
 
             modelBuilder.Entity<ProductInventoryProductType>()
-                .HasOne(x => x.Inventory)
+                .HasOne(x => x.ProductInventory)
                 .WithMany(x => x.ProductInventoryProductTypes)
                 .HasForeignKey(x => x.ProductInventoryId);
 

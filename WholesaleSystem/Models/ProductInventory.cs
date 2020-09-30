@@ -64,7 +64,7 @@ namespace WholesaleSystem.Models
 
         public int ProductTypeId { get; set; }
 
-        public ProductInventory Inventory { get; set; }
+        public ProductInventory ProductInventory { get; set; }
 
         public ProductType ProductType { get; set; }
     }
