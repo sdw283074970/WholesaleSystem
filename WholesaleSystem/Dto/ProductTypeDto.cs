@@ -15,6 +15,8 @@ namespace WholesaleSystem.Dto
 
         public int TypeLayer { get; set; }
 
+        public bool IsActive { get; set; }
+
         public int ProductCount { get; set; }
     }
 }

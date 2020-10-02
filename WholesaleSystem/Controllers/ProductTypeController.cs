@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -25,11 +26,32 @@ namespace WholesaleSystem.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/ProductType/GetProductTypes
+        // GET: api/ProductType/GetProductTypes/
         [HttpGet]
         public IActionResult GetProductTypes()
         {
-            return Ok(_mapper.Map<IEnumerable<ProductType>, IEnumerable<ProductTypeDto>>(_context.ProductTypes.Include(x => x.InventoryProductTypes).Where(x => x.IsActive == true)));
+            return Ok(_mapper.Map<IEnumerable<ProductType>, IEnumerable<ProductTypeDto>>(_context.ProductTypes.Include(x => x.InventoryProductTypes).ToList()));
+        }
+
+        // GET: api/ProductType/GetProductTypeInfoById/?typeId=foo
+        [HttpGet]
+        public IActionResult GetProductTypeInfoById([FromQuery]int typeId)
+        {
+            return Ok(_mapper.Map<ProductType, ProductTypeDto>( _context.ProductTypes.SingleOrDefault(x => x.Id == typeId)));
+        }
+
+        // PUT: api/ProductType/UpdateProductTypeInfo/
+        [HttpPut]
+        public void UpdateProductTypeInfo([FromBody]ProductTypeDto typeInfo)
+        {
+            var typeInDb = _context.ProductTypes.Find(typeInfo.Id);
+
+            typeInDb.IsActive = typeInfo.IsActive;
+            typeInDb.TypeCode = typeInfo.TypeCode;
+            typeInDb.TypeLayer = typeInfo.TypeLayer;
+            typeInDb.TypeName = typeInfo.TypeName;
+
+            _context.SaveChanges();
         }
     }
 }
