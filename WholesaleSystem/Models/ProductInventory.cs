@@ -19,6 +19,8 @@ namespace WholesaleSystem.Models
 
         public string Product_title_en { get; set; }
 
+        public string Product_description { get; set; }
+
         public string Warehouse_code { get; set; }
 
         public int Onway { get; set; }

@@ -53,6 +53,8 @@ namespace WholesaleSystem.Dto
 
         public float SalePrice { get; set; }
 
+        public string Product_description { get; set; }
+
         public float CostPrice { get; set; }
 
         public ProductTypeDto ProductTypeDto { get; set; }

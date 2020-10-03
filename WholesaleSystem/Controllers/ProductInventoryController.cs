@@ -84,6 +84,8 @@ namespace WholesaleSystem.Controllers
             productInventoryInDb.CostPrice = form.CostPrice;
             productInventoryInDb.SalePrice = form.SalePrice;
             productInventoryInDb.OriginalPrice = form.OriginalPrice;
+            productInventoryInDb.Product_description = form.Product_description;
+
             _context.SaveChanges();
         }
 
