@@ -30,7 +30,7 @@ namespace WholesaleSystem.Controllers
         [HttpGet]
         public IActionResult GetProductTypes()
         {
-            return Ok(_mapper.Map<IEnumerable<ProductType>, IEnumerable<ProductTypeDto>>(_context.ProductTypes.Include(x => x.InventoryProductTypes).ToList()));
+            return Ok(_mapper.Map<IEnumerable<ProductType>, IEnumerable<ProductTypeDto>>(_context.ProductTypes.Include(x => x.InventoryProductTypes).ToList().OrderBy(x => x.TypeName)));
         }
 
         // GET: api/ProductType/GetProductTypeInfoById/?typeId=foo

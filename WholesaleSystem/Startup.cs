@@ -54,8 +54,19 @@ namespace WholesaleSystem
                 });
             services.AddDbContext<ApplicationDbContext>().AddEntityFrameworkSqlServer();
             services.AddAutoMapper(typeof(AutoMapperConfig));
-            services.AddCors(option => option.AddPolicy("cors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(new[] { "http://localhost:8080", "http://localhost:8090", "https://allbuylow.com", "http://allbuylow.com", "http://giveitsaveit.com", "https://giveitsaveit.com" })));
-    
+            services.AddCors(option => option.AddPolicy("cors", policy => policy.WithOrigins(new[] { "http://localhost:8080", "http://localhost:8090", "https://www.allbuylow.com", "https://allbuylow.com", "http://allbuylow.com", "http://giveitsaveit.com", "https://giveitsaveit.com", "https://www.giveitsaveit.com" })));
+
+            services.AddCors(op =>
+            {
+                op.AddPolicy("cors2", set =>
+                {
+                    set.SetIsOriginAllowed(origin => true)
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials();
+                });
+            });
+
             services.AddMvc()
                 //.AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
                 .AddXmlSerializerFormatters();
@@ -68,7 +79,7 @@ namespace WholesaleSystem
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("cors");
+            app.UseCors("cors2");
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

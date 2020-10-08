@@ -139,7 +139,7 @@ namespace WholesaleSystem.Controllers
                 }
             }
 
-            return results;
+            return results.OrderByDescending(x => x.Pi_update_time).ToList();
         }
     }
 }
